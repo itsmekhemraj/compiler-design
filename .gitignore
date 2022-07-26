@@ -1,0 +1,12 @@
+# ignoring executable files produced during tests
+*.out
+*.exe
+
+# ignoring the swap files produced by VIM
+*.swp
+
+# ignoring folder that stores the unprepared drafts and references
+references/
+
+# ignoring file that stores VSCode configurations
+.vscode/
