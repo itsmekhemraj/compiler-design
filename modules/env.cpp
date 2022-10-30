@@ -19,3 +19,6 @@ void CompilerEnvironment::set_info(int argc, char*argv[]) {
         if (std::string(argv[i]) == "--readable") this->is_readable = true;
     }
 }
+
+
+CompilerEnvironment ENV;

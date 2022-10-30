@@ -103,3 +103,5 @@ std::string SymbolTable::tokenize(std::string identifier) {
 
     return token;
 }
+
+SymbolTable ST;
