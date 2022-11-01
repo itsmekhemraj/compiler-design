@@ -76,10 +76,10 @@ class Tokens {
         }
 
         /* The keywords in Wiz are;
-        if      else        then        and     or      not     end     function        let 
+        if, else, then, and, or, not, end, let, print
         */
         bool is_keyword(std::string lexemes) {
-            if (lexemes == "if" || lexemes == "else" || lexemes == "then" || lexemes == "end" || lexemes == "and" || lexemes == "or" || lexemes == "not" || lexemes == "function" || lexemes == "let") {
+            if (lexemes == "if" || lexemes == "else" || lexemes == "then" || lexemes == "end" || lexemes == "and" || lexemes == "or" || lexemes == "not" || lexemes == "let" || lexemes == "print") {
                 return true;
             }
 
