@@ -63,7 +63,9 @@ char Lexer::read_right_ptr() {
 }
 
 std::string get_token_prefix(std::string lexeme) {
-    return "hello";
+    if (TOKEN.is_keyword(lexeme)) return "KY";
+    return "ID";
+    //if (TOKEN.)
 }
 
 void Lexer::parse(std::string infile) {
@@ -74,6 +76,13 @@ void Lexer::parse(std::string infile) {
     std::string lexeme;         // stores the token it reads
 
     while (true) {
+        // if illegal character is encountered: ignore the character and move on show error at the end
+        if (!TOKEN.is_character_set(this->read_right_ptr()) && this->read_right_ptr() != EOF) {
+            std::cout<<"Illegal character encountered: "<<this->read_right_ptr()<<std::endl;
+            this->move_right_ptr();
+            continue;
+        }
+
         if (this->read_left_ptr() == ' ') {
             this->move_left_ptr();
             this->move_right_ptr();
@@ -90,6 +99,7 @@ void Lexer::parse(std::string infile) {
         }
 
         if (this->read_right_ptr() == '\n') {
+            // if escape character \ occurs before \n do not treat \n as a newline
             if (lexeme.back() == '\\') lexeme.pop_back(); else std::cout<<std::endl<<std::endl;
         } else {
             lexeme.push_back(this->read_right_ptr());
