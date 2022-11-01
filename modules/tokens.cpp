@@ -31,7 +31,7 @@ class Tokens {
         }
 
         bool is_whitespace (char lexeme) {
-            if (lexeme == ' ' || lexeme == '\t' || lexeme == '\r') return true;
+            if (lexeme == ' ' || lexeme == '\t' || lexeme == '\r' || lexeme == '\n') return true;
 
             return false;
         }
@@ -43,12 +43,12 @@ class Tokens {
         }
 
         bool is_character_set (char lexeme) {
-            if (lexeme == this->is_digit(lexeme)) return true;
-            if (lexeme == this->is_alphabet(lexeme)) return true;
-            if (lexeme == this->is_operator(lexeme)) return true;
-            if (lexeme == this->is_punctuator(lexeme)) return true;
-            if (lexeme == this->is_whitespace(lexeme)) return true;
-            if (lexeme == this->is_special_char(lexeme)) return true;
+            if (this->is_digit(lexeme)) return true;
+            if (this->is_alphabet(lexeme)) return true;
+            if (this->is_operator(lexeme)) return true;
+            if (this->is_punctuator(lexeme)) return true;
+            if (this->is_whitespace(lexeme)) return true;
+            if (this->is_special_char(lexeme)) return true;
 
             return false;
         }
