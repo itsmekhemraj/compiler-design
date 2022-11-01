@@ -74,6 +74,8 @@ void Lexer::parse(std::string infile) {
     this->fptr_right.open(infile);
 
     std::string lexeme;         // stores the token it reads
+    
+    bool is_comment_start = false;
 
     while (true) {
         // if illegal character is encountered: ignore the character and move on show error at the end
@@ -83,11 +85,23 @@ void Lexer::parse(std::string infile) {
             continue;
         }
 
+        // handling comments
+        if (this->read_right_ptr() == '#') is_comment_start = true;
+        
+        while (is_comment_start) {
+            this->move_right_ptr();
+            if (this->read_right_ptr() == '\n' || this->read_right_ptr() == EOF) is_comment_start = false;
+        }
+
+        // if whitespace encountered by left pointer
         if (this->read_left_ptr() == ' ') {
             this->move_left_ptr();
             this->move_right_ptr();
             continue;
         }
+
+        // handling EOF and empty lexeme situation
+        if (this->read_right_ptr() == EOF && lexeme.empty()) break;
 
         if ((this->fptr_right.peek() == EOF || this->read_right_ptr() == ' ' || this->read_right_ptr() == '\n') && !lexeme.empty() && lexeme.back() != '\\') {
             std::cout<<"Token Detected: "<<lexeme<<std::endl;
@@ -102,9 +116,9 @@ void Lexer::parse(std::string infile) {
             // if escape character \ occurs before \n do not treat \n as a newline
             if (lexeme.back() == '\\') lexeme.pop_back(); else std::cout<<std::endl<<std::endl;
         } else {
-            lexeme.push_back(this->read_right_ptr());
+            if (this->read_right_ptr() != EOF) lexeme.push_back(this->read_right_ptr());
         }
-        this->move_right_ptr();
+        if (this->read_right_ptr() != EOF) this->move_right_ptr();
     }
 
     std::cout<<"Lexer completed";
