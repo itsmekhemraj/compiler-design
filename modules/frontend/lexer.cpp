@@ -33,6 +33,7 @@ class Lexer {
         char read_right_ptr();
         std::string get_token_prefix(std::string);
         void parse(std::string);
+        void update(std::string);
 };
 
 void Lexer::move_left_ptr(bool is_toright = false) {
@@ -68,13 +69,19 @@ std::string get_token_prefix(std::string lexeme) {
     //if (TOKEN.)
 }
 
+void Lexer::update(std::string line) {
+    while (TOKEN.is_whitespace(line.back())) line.pop_back();
+    this->fptr_output<<line<<'\n'; 
+}
+
 void Lexer::parse(std::string infile) {
     // setting up the file pointers
     this->fptr_left.open(infile);
     this->fptr_right.open(infile);
 
     std::string lexeme;         // stores the token it reads
-    
+    std::string stmt;           // stores the parsed statement
+
     bool is_comment_start = false;
 
     while (true) {
@@ -90,7 +97,21 @@ void Lexer::parse(std::string infile) {
         
         while (is_comment_start) {
             this->move_right_ptr();
-            if (this->read_right_ptr() == '\n' || this->read_right_ptr() == EOF) is_comment_start = false;
+            
+            if (this->read_right_ptr() == '\n' || this->read_right_ptr() == EOF) {
+                is_comment_start = false;
+                
+                if (!lexeme.empty()) {
+                    stmt+=lexeme;
+                    stmt+=' ';
+                    lexeme.clear();
+                }
+                
+                if (!stmt.empty()) {
+                    this->update(stmt);
+                    stmt.clear();
+                }    
+            }
         }
 
         // if whitespace encountered by left pointer
@@ -103,9 +124,15 @@ void Lexer::parse(std::string infile) {
         // handling EOF and empty lexeme situation
         if (this->read_right_ptr() == EOF && lexeme.empty()) break;
 
-        if ((this->fptr_right.peek() == EOF || this->read_right_ptr() == ' ' || this->read_right_ptr() == '\n') && !lexeme.empty() && lexeme.back() != '\\') {
-            std::cout<<"Token Detected: "<<lexeme<<std::endl;
+        if ((this->fptr_right.peek() == EOF || this->read_right_ptr() == ' ' || this->read_right_ptr() == '\n') && !lexeme.empty() && lexeme.back() != '\\') { 
+            stmt += lexeme;
+            stmt += " ";
             
+            if(this->read_right_ptr() == '\n' || this->fptr_right.peek() == EOF) {
+                this->update(stmt);
+                stmt.clear();
+            }
+
             lexeme.clear();
             
             if (this->fptr_right.peek() == EOF) break; else this->move_left_ptr(true);
@@ -114,14 +141,12 @@ void Lexer::parse(std::string infile) {
 
         if (this->read_right_ptr() == '\n') {
             // if escape character \ occurs before \n do not treat \n as a newline
-            if (lexeme.back() == '\\') lexeme.pop_back(); else std::cout<<std::endl<<std::endl;
+            if (lexeme.back() == '\\') lexeme.pop_back();
         } else {
             if (this->read_right_ptr() != EOF) lexeme.push_back(this->read_right_ptr());
         }
         if (this->read_right_ptr() != EOF) this->move_right_ptr();
     }
-
-    std::cout<<"Lexer completed";
 }
 
 Lexer LEXER;
