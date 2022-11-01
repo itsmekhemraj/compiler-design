@@ -76,7 +76,7 @@ void Lexer::parse(std::string infile) {
             continue;
         }
 
-        if ((this->fptr_right.peek() == EOF || this->read_right_ptr() == ' ') && !lexeme.empty()) {
+        if ((this->fptr_right.peek() == EOF || this->read_right_ptr() == ' ' || this->read_right_ptr() == '\n') && !lexeme.empty()) {
             std::cout<<"Token Detected: "<<lexeme<<std::endl;
 
             lexeme.clear();
@@ -85,7 +85,11 @@ void Lexer::parse(std::string infile) {
             continue;
         }
 
-        lexeme.push_back(this->read_right_ptr());
+        if (this->read_right_ptr() == '\n') {
+            std::cout<<std::endl<<std::endl;
+        } else {
+            lexeme.push_back(this->read_right_ptr());
+        }
         this->move_right_ptr();
     }
 
