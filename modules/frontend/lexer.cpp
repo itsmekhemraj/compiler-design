@@ -31,7 +31,7 @@ class Lexer {
         void move_right_ptr();
         char read_left_ptr();
         char read_right_ptr();
-        int is_token();
+        std::string get_token_prefix(std::string);
         void parse(std::string);
 };
 
@@ -62,6 +62,10 @@ char Lexer::read_right_ptr() {
     return c;
 }
 
+std::string get_token_prefix(std::string lexeme) {
+    return "hello";
+}
+
 void Lexer::parse(std::string infile) {
     // setting up the file pointers
     this->fptr_left.open(infile);
@@ -76,9 +80,9 @@ void Lexer::parse(std::string infile) {
             continue;
         }
 
-        if ((this->fptr_right.peek() == EOF || this->read_right_ptr() == ' ' || this->read_right_ptr() == '\n') && !lexeme.empty()) {
+        if ((this->fptr_right.peek() == EOF || this->read_right_ptr() == ' ' || this->read_right_ptr() == '\n') && !lexeme.empty() && lexeme.back() != '\\') {
             std::cout<<"Token Detected: "<<lexeme<<std::endl;
-
+            
             lexeme.clear();
             
             if (this->fptr_right.peek() == EOF) break; else this->move_left_ptr(true);
@@ -86,7 +90,7 @@ void Lexer::parse(std::string infile) {
         }
 
         if (this->read_right_ptr() == '\n') {
-            std::cout<<std::endl<<std::endl;
+            if (lexeme.back() == '\\') lexeme.pop_back(); else std::cout<<std::endl<<std::endl;
         } else {
             lexeme.push_back(this->read_right_ptr());
         }
