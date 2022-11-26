@@ -32,7 +32,7 @@ class Lexer {
         char read_left_ptr();
         char read_right_ptr();
         std::string get_token_prefix(std::string);
-        void parse(std::string);
+        bool parse(std::string);
         void update(std::string);
 };
 
@@ -74,7 +74,10 @@ void Lexer::update(std::string line) {
     this->fptr_output<<line<<'\n'; 
 }
 
-void Lexer::parse(std::string infile) {
+bool Lexer::parse(std::string infile) {
+    bool has_error = false;
+    int line = 1;
+
     // setting up the file pointers
     this->fptr_left.open(infile);
     this->fptr_right.open(infile);
@@ -87,7 +90,8 @@ void Lexer::parse(std::string infile) {
     while (true) {
         // if illegal character is encountered: ignore the character and move on show error at the end
         if (!TOKEN.is_character_set(this->read_right_ptr()) && this->read_right_ptr() != EOF) {
-            std::cout<<"Illegal character encountered: "<<this->read_right_ptr()<<std::endl;
+            ERROR.set_error("405", line);
+            has_error = true;
             this->move_right_ptr();
             continue;
         }
@@ -99,6 +103,7 @@ void Lexer::parse(std::string infile) {
             this->move_right_ptr();
             
             if (this->read_right_ptr() == '\n' || this->read_right_ptr() == EOF) {
+                if (this->read_right_ptr() == '\n') line++;
                 is_comment_start = false;
                 
                 if (!lexeme.empty()) {
@@ -128,6 +133,8 @@ void Lexer::parse(std::string infile) {
             stmt += lexeme;
             stmt += " ";
             
+            if (this->read_right_ptr() == '\n') line++;
+
             if(this->read_right_ptr() == '\n' || this->fptr_right.peek() == EOF) {
                 this->update(stmt);
                 stmt.clear();
@@ -140,6 +147,8 @@ void Lexer::parse(std::string infile) {
         }
 
         if (this->read_right_ptr() == '\n') {
+            if (this->read_right_ptr() == '\n') line++;
+
             // if escape character \ occurs before \n do not treat \n as a newline
             if (lexeme.back() == '\\') lexeme.pop_back();
         } else {
@@ -147,6 +156,8 @@ void Lexer::parse(std::string infile) {
         }
         if (this->read_right_ptr() != EOF) this->move_right_ptr();
     }
+
+    if (has_error) return false; else return true;
 }
 
 Lexer LEXER;

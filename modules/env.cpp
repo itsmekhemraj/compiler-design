@@ -1,5 +1,4 @@
 #include <fstream>      // used for file handling
-
 /*
 The arguments for wiz compiler is explained below;
 NAME: WIZ - Used for compileing the files written in wiz programming language (*.wiz)
@@ -23,11 +22,13 @@ class CompilerEnvironment {
             this->outputfile = "";
         }
 
-        void set_info(int argc, char*argv[]);
+        bool set_info(int argc, char*argv[]);
+        void abort();
 };
 
 // function `set_info()` is used to interact with the data members of `CompilerEnvironment`
-void CompilerEnvironment::set_info(int argc, char*argv[]) {
+bool CompilerEnvironment::set_info(int argc, char*argv[]) {
+    bool has_error = false;
     for(int i=1; i<argc; i++) {
         
         // if the command arguments has options signified by word followed by double hyphen (--)
@@ -56,19 +57,26 @@ void CompilerEnvironment::set_info(int argc, char*argv[]) {
 
                 // if does not contain .wiz extension
                 if (len<=4) {
-                    std::cout<<"Error file not compatible type please use extension .wiz";
+                    ERROR.set_error("403", 0);
+                    has_error = true;
                 } else {
                     if (!(filename.at(len-1) == 'z' && filename.at(len-2) == 'i' && filename.at(len-3) == 'w' && filename.at(len-4) == '.')) {
-                        std::cout<<"Extension mismatch"<<std::endl<<filename.at(len-1);
+                        ERROR.set_error("403", 0);
+                        has_error = true;
                     }
                 }
             } else {
-                std::cout<<"Error detected!!";
+                ERROR.set_error("404", 0);
+                has_error = true;
             }
 
             file.close();
         }
     }
+
+    if (has_error) return false; else return true;
 }
+
+void CompilerEnvironment::abort() { ERROR.show_errors(); }
 
 CompilerEnvironment ENV;
