@@ -9,6 +9,7 @@
 #include <unordered_map>        // undordered map is the implementation of hash table data structures in C++ STL
 #include <string>               // requires C++ string library
 #include <time.h>
+
 /* DOCUMENTATION SECTION ABOUT UNORDERED MAP
 
 Here are some guides about unordered map in C++,
@@ -45,42 +46,73 @@ std::cout<<umap.at("apple");         // outputs 1
 
 // class `SymbolTable` is the symbol table for the compiler. which stores token number as key and identifier as value
 class SymbolTable {
-    std::unordered_map<std::string, std::string> umap;
+    std::unordered_map<std::string, std::string> umap_identifier; // key is token and value is identifier
+    std::unordered_map<std::string, std::string> umap_token;      // key is identifier and values is token
+    std::unordered_map<std::string, std::string> umap_type;       // key is token and value is datatype
+    std::unordered_map<std::string, int> umap_lod;                // key is token and value is lod
     static int TOKEN_COUNT;     // total number of tokens during the compilation
 
     public:
-        void insert(std::string, std::string);
-        std::string lookup(std::string);
+        bool insert(std::string, std::string, int);  // returns 0 if already exists
+        bool lookup(std::string);
+        std::string get_token(std::string);
+        std::string get_identifier(std::string);
+        std::string get_datatype(std::string);
+        int get_lod(std::string);
+        void show();
+
         std::string tokenize(std::string);
 
-        static int get_token_count() {
-            return SymbolTable::TOKEN_COUNT;
-        }
-
-        static void increment_token_count() {
-            SymbolTable::TOKEN_COUNT++;
-        }
+        static int get_token_count() { return SymbolTable::TOKEN_COUNT; }
+        static void increment_token_count() { SymbolTable::TOKEN_COUNT++; }
 };
 
 int SymbolTable::TOKEN_COUNT = 0;       // initialization of TOKEN_COUNT
 
-// function `insert()` is used to make an entry in the symbol table
-void SymbolTable::insert(std::string token, std::string identifier) {
-    this->umap.insert(std::make_pair(token, identifier));
+bool SymbolTable::insert(std::string identifier, std::string datatype, int lod) {
+    if (this->lookup(identifier)) {
+        return false;
+    } else {
+        std::string tk = this->tokenize(identifier);
+        this->umap_identifier.insert(make_pair(tk, identifier));
+        this->umap_token.insert(make_pair(identifier, tk));
+        this->umap_type.insert(make_pair(tk, datatype));
+        this->umap_lod.insert(make_pair(tk, lod));
+
+        return true;
+    }
 }
 
-// function `lookup()` is used to lookup an entry in the symbol table and returns #404# if the token is not found
-std::string SymbolTable::lookup(std::string token) {
-    if (this->umap.find(token) == this->umap.end()) return "#404#";
-    return this->umap.at(token);
+bool SymbolTable::lookup(std::string identifier) {
+    if (this->umap_token.find(identifier) == this->umap_token.end()) return false;
+    
+    return true;
+}
+
+std::string SymbolTable::get_datatype(std::string token) {
+    if (this->lookup(this->get_identifier(token))) return this->umap_type.at(token);
+    return "404";
+}
+
+int SymbolTable::get_lod(std::string token) {
+    if (this->lookup(this->get_identifier(token))) return this->umap_lod.at(token);
+    return 0;
+}
+
+std::string SymbolTable::get_token(std::string identifier) {
+    if (this->lookup(identifier)) return this->umap_token.at(identifier);
+    return "404";
+}
+
+std::string SymbolTable::get_identifier(std::string token) {
+    if (this->umap_identifier.find(token) == this->umap_identifier.end()) {
+        return "404";
+    } else {
+        return this->umap_identifier.at(token);
+    }
 }
 
 std::string SymbolTable::tokenize(std::string identifier) {
-    // checking whether the identifier has been previously tokenized or not
-    for (const auto&[key, value]: this->umap) {
-        if (value == identifier) return key;
-    }
-
     this->increment_token_count();
 
     if (ENV.is_readable == true) {
@@ -89,16 +121,15 @@ std::string SymbolTable::tokenize(std::string identifier) {
     }
 
     std::string token;
-    srand(time(NULL)); // seeds the time
-    char rndChar = 0;
 
+    char rndChar = 0;
     while (true) {
         for (int i=0; i<6; i++) {
             rndChar = rand()%(90-65+1)+65; // Generate the number, assign to variable.
             token.push_back(rndChar);
         }
 
-        if(this->lookup(token) == "#404#") break;
+        if(!this->lookup(token)) break;
     }
 
     return token;
