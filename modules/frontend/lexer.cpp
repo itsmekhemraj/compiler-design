@@ -27,6 +27,12 @@ class Lexer {
             this->fptr_right.close();
         }
 
+        void kill () {
+            this->fptr_output.close();
+            this->fptr_left.close();
+            this->fptr_right.close();
+        }
+        
         void move_left_ptr(bool);
         void move_right_ptr();
         char read_left_ptr();
@@ -130,9 +136,26 @@ bool Lexer::parse(std::string infile) {
         if (this->read_right_ptr() == EOF && lexeme.empty()) break;
 
         if ((this->fptr_right.peek() == EOF || this->read_right_ptr() == ' ' || this->read_right_ptr() == '\n') && !lexeme.empty() && lexeme.back() != '\\') { 
-            stmt += lexeme;
-            stmt += " ";
+            std::string add = TOKEN.get_token(lexeme);
             
+            if (add == lexeme) {
+                std::string tk = "";
+
+                if (lexeme.at(0) == '"' && lexeme.at(lexeme.length()-1) == '"') {
+                    ST.insert(add, "string", line);
+                    add = ST.get_token(add);
+                } else if (lexeme.at(0) == '\'' && lexeme.length() == 3 && lexeme.at(lexeme.length()-1) == '\'') {
+                    ST.insert(add, "char", line);
+                    add = ST.get_token(add);
+                } else if (TOKEN.is_valid_identifier(lexeme)) {
+                    ST.insert(add, "identifier", line);
+                    add = ST.get_token(add);
+                }
+            }
+
+            stmt += add;
+            stmt += " ";
+
             if (this->read_right_ptr() == '\n') line++;
 
             if(this->read_right_ptr() == '\n' || this->fptr_right.peek() == EOF) {
@@ -141,6 +164,7 @@ bool Lexer::parse(std::string infile) {
             }
 
             lexeme.clear();
+            add.clear();
             
             if (this->fptr_right.peek() == EOF) break; else this->move_left_ptr(true);
             continue;

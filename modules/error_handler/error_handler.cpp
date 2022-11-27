@@ -29,6 +29,7 @@ void ErrorLog::show_errors () {
         if (err == "404") std::cout<<"the file was not found."<<std::endl; 
         if (err == "403") std::cout<<"incompatible file type."<<std::endl; 
         if (err == "405") std::cout<<"illegal character encountered."<<std::endl; 
+        if (err == "406") std::cout<<"illegal value."<<std::endl; 
     }
 }
 

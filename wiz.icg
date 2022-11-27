@@ -1,0 +1,12 @@
+#include <iostream>
+using namespace std;
+
+int main(void) {
+	float NKARKE = 100;
+	float KPVQCI = 200;
+	float QXKYZV = 10;
+	QXKYZV = KPVQCI+100;
+	cout<<QXKYZV;
+	cin>>KPVQCI;
+	return 0; 
+}

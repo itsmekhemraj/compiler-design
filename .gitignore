@@ -10,3 +10,6 @@ references/
 
 # ignoring file that stores VSCode configurations
 .vscode/
+
+# ignoring test files
+*.lex

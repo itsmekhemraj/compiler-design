@@ -1,0 +1,11 @@
+let num1 = 100
+let num2 = 200
+let num3 = 10
+num3 = num2 + 100
+
+output num3
+input num2
+
+output num2
+output "hello"
+output num1
