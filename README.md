@@ -8,7 +8,6 @@ This project aims to create own compiler for own language using C++ concept and 
 * To present the analytics of overall hospitals to the authorized personnel,
 * To bring clinical, financial, and administrative departments under one roof.
 
-## Tips Regarding the Project
 ### Proper Documentation Style of the Project
 Every file created inside must have well defined documentation section in the structure below;
 ````
