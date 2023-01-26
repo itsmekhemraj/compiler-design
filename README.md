@@ -1,14 +1,16 @@
 # [C++ Project-077-BCT-Compiler Design](https://github.com/niyoj/compiler-design)
 
 ## Introduction to the project
-This project aims to create own compiler for own language using C++ concept and theme. We have use .wiz as the extension for our compiler, used Lexical analysis, Suntax analysis, different code optimization ideas. 
+This project aims to create own compiler for own language using C++ concept and theme. We used Lexical analysis, Syntax analysis, different code optimization ideas, symbol table, error handling to develope this compiler. 
+Our compiler named WIZ, designed by focusing to get rid of the hard syntax format, as other programming language, our WIZ has its own extension i.e .wiz.
+
 So, what is Compiler Design.? 
   Compiler Design is the structure and set of principles that guide the translation, analysis, and optimization process of a compiler. A Compiler is computer software      that transforms program source code which is written in a high-level language into low-level machine code.
 
 ## Objective of the project
-* To store, manage, manipulate and retrieve the data of health institutions,
-* To present the analytics of overall hospitals to the authorized personnel,
-* To bring clinical, financial, and administrative departments under one roof.
+* To compile and run our own syntax programming language,
+* To make syntax friendly to the user,
+* Easy to debug, and Minimize time and space complexity.
 
 ### Proper Documentation Style of the Project
 Every file created inside must have well defined documentation section in the structure below;
@@ -22,6 +24,11 @@ Every file created inside must have well defined documentation section in the st
 *   References: REFRENCES (If Any)
 *******************************************************************************************************/
 ````
+
+## Future Enhancement
+* Addition of more modules for different project sectors,
+* Development of algorithms for doing big maths to implement complex functionality,
+* Better searching algorithms.
 
 ## Contributors
 This project has recieved major contribution of;
