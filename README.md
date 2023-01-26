@@ -1,7 +1,7 @@
 # [C++ Project-077-BCT-Compiler Design](https://github.com/niyoj/compiler-design)
 
 ## Introduction to the project
-This project aims to create own compiler for own language using C++ concept and theme. We used Lexical analysis, Syntax analysis, different code optimization ideas, symbol table, error handling to develope this compiler. 
+This project aims to create compiler for own language using C++ concept and theme. We used Lexical analysis, Syntax analysis, different code optimization ideas, symbol table, error handling to develope this compiler. 
 Our compiler named WIZ, designed by focusing to get rid of the hard syntax format, as other programming language, our WIZ has its own extension i.e .wiz.
 
 So, what is Compiler Design.? 
